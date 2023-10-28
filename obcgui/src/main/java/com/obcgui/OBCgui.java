@@ -6,10 +6,7 @@ import net.fauxpark.oled.font.CodePage1252;
 import net.fauxpark.oled.transport.I2CTransport;
 import net.fauxpark.oled.transport.Transport;
 
-/**
- * Hello world!
- *
- */
+
 public class OBCgui
 {
     static Transport transport;
@@ -27,17 +24,17 @@ public class OBCgui
         // }
         //
         // System.out.println( "set Player" );
-        // OBCdisplay.setPlayerOnline(1, "XDJ1000MK2", false);
-        // OBCdisplay.setPlayerOnline(2, "AbletonLink", true);
-        //
-        // OBCdisplay.setPlayerMaster(2, true);
-        //
-        // try {
-        //     Thread.sleep(2000);
-        // } catch (InterruptedException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
+        OBCdisplay.setPlayerOnline(1, "XDJ1000MK2", false);
+        OBCdisplay.setPlayerOnline(2, "AbletonLink", true);
+        OBCdisplay.setPlayerMaster(2, true);
+        OBCdisplay.setTempo(123.45);
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        OBCdisplay.setTempo(67.45);
         // System.out.println( "player1 offline" );
         // OBCdisplay.setPlayerOffline(1);
         // try {
@@ -51,18 +48,18 @@ public class OBCgui
         // OBCdisplay.setPlayerOnline(1, "XDJ2000nxs2", false);
         // OBCdisplay.setPlayerMaster(1, true);
         //
-        // try {
-        //     Thread.sleep(1000);
-        // } catch (InterruptedException e) {
-        //     // TODO Auto-generated catch block
-        //     e.printStackTrace();
-        // }
-        // System.out.println( "exit application!" );
-        // System.exit(0);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println( "exit application!" );
+        System.exit(0);
     }
 
     public static void init(){
-        System.out.println("starting OBCgui(init)...");
+        System.out.println("init gui");
         transport = new I2CTransport(0, 1, 0x3C);
         OBCdisplay.init(transport);
     }

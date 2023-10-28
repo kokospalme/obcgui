@@ -55,7 +55,9 @@ public class OBCdisplay {
      * sets current tempo
      */
     public static void setTempo(double tempo){
-        properties.tempo = tempo;
+        double _tempo = Math.round(tempo * 100);
+        _tempo = _tempo / 100;
+        properties.tempo = _tempo;
         updateTempo = true;
 
     }
@@ -108,12 +110,25 @@ public class OBCdisplay {
     public static void showMain(){
         if(updateTempo){
             for(int i = 0; i < 128; i++){   //blank playerOnOff-bar
-                for(int j = 25; j < 30; j++){
+                for(int j = 25; j < 37; j++){
                     ssd1306.setPixel(i, j, false);
                 }
             }
-            graphics.text(40, 25, new CodePage1252(), "152.12 BPM");    //ToDo: Dummy
+            ssd1306.display();
+
+            // double _tempDecimals = properties.tempo/100;
+            // int _tempDecimalsnt = (int)_tempDecimals;
+            // int _temp = (int)properties.tempo;
+            if(properties.tempo < 100){
+                graphics.text(46, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,5));
+            }else{
+                graphics.text(40, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,6));
+            }
+            graphics.text(78, 25, new CodePage1252(), "BPM");
+            // graphics.text(64, 25, new CodePage1252(), Integer.toString(_tempDecimalsnt));   //write decimals
+            
             updateTempo = false;
+            ssd1306.display();
         }
 
 
