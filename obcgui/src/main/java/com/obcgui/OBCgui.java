@@ -1,5 +1,16 @@
 package com.obcgui;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.diozero.api.DigitalInputEvent;
+import com.diozero.api.function.DeviceEventConsumer;
+import com.diozero.devices.Button;
+import com.diozero.devices.LED;
+import com.diozero.util.SleepUtil;
+import com.pi4j.io.gpio.digital.DigitalInput;
+import com.pi4j.io.gpio.digital.PullResistance;
+
 import net.fauxpark.oled.Graphics;
 import net.fauxpark.oled.SSD1306;
 import net.fauxpark.oled.font.CodePage1252;
@@ -11,10 +22,60 @@ public class OBCgui
 {
     static Transport transport;
     static OBCdisplay display;
+    static Button buttonMaster;
+    static Button buttonLatUp;
+    static Button buttonLatDown;
+    static final int BTN_MA = 4;
+    static final int BTN_LUP = 22;
+    static final int BTN_LDDOWN = 27;
+
+    static Timer timer;
+    static int intervall = 60;
+
+
+    static int testLatency = 0;
+
+
     public static void main( String[] args )
     {
         System.out.println("starting OBCgui(main)...");
         init();
+        initButtons();
+
+        timer = new Timer();    //initialize timer
+        timer.scheduleAtFixedRate(new TimerTask() { //set timer
+            @Override
+            public void run() {
+
+            if(!buttonMaster.isPressed()){
+                System.out.println("is Master now");
+                while(!buttonMaster.isPressed()){}    //wait for button to get released
+            }
+            if(!buttonLatUp.isPressed()){
+                testLatency++;
+                // System.out.println(testLatency);
+                OBCdisplay.setLatency(testLatency);
+                while(!buttonLatUp.isPressed()){
+                    if(!buttonMaster.isPressed()){
+                        System.out.println( "exit application!" );
+                        System.exit(0);
+                    }
+                }    //wait for button to get released
+            }
+            if(!buttonLatDown.isPressed()){
+                testLatency--;
+                OBCdisplay.setLatency(testLatency);
+                // System.out.println(testLatency);
+
+                while(!buttonLatDown.isPressed()){}    //wait for button to get released
+            }
+            }
+
+        }, 0, intervall); //no delay, then call method every x ms
+
+                    
+
+
         // OBCdisplay.init(transport);
         // try {
         //     Thread.sleep(4000);
@@ -24,14 +85,16 @@ public class OBCgui
         // }
         //
         // System.out.println( "set Player" );
-        OBCdisplay.setBarphase(123.45);
+        
         OBCdisplay.setPlayerOnline(1, "XDJ1000MK2", false);
         OBCdisplay.setPlayerOnline(2, "AbletonLink", true);
         OBCdisplay.setPlayerMaster(2, true);
-        
+
         try {
-            OBCdisplay.setTempo(0);
-            Thread.sleep(3000);
+            OBCdisplay.setTempo(10.1);
+            Thread.sleep(7000);
+            OBCdisplay.setTempo(10.15);
+            Thread.sleep(7000);
             OBCdisplay.setTempo(123);
             Thread.sleep(3000);
             OBCdisplay.setTempo(67.45);
@@ -57,13 +120,19 @@ public class OBCgui
 
 
         // try {    //!!! only for testing!
-        //     Thread.sleep(5000);
+        //     Thread.sleep(10000);
         // } catch (InterruptedException e) {
         //     // TODO Auto-generated catch block
         //     e.printStackTrace();
         // }
         // System.out.println( "exit application!" );
         // System.exit(0);
+    }
+
+    public static void initButtons() {
+        buttonMaster  = new Button(BTN_MA);
+        buttonLatUp  = new Button(BTN_LUP);
+        buttonLatDown  = new Button(BTN_LDDOWN);
     }
 
     public static void init(){
