@@ -55,18 +55,21 @@ public class OBCdisplay {
      * sets current tempo
      */
     public static void setTempo(double tempo){
+
         double _tempo = Math.round(tempo * 100);
         _tempo = _tempo / 100;
-        properties.tempo = _tempo;
-        updateTempo = true;
-
+        if(properties.tempo != _tempo){
+            properties.tempo = _tempo;
+            updateTempo = true;
+        }
+        
     }
 
     /*
      * sets beat/bar-phase
      */
     public static void setBarphase(double phase){
-        properties.phase = phase;
+        if(properties.phase != phase)properties.phase = phase;
     }
 
     /*
@@ -108,39 +111,48 @@ public class OBCdisplay {
      * shows mainMenu 
      */
     public static void showMain(){
+
+        //phase-bar
+        for(int i = 0; i < 128; i++){   //blank phase-bar
+            for(int j = 0; j < 24; j++){
+                ssd1306.setPixel(i, j, false);
+            }
+        }
+        graphics.text(40, 0, new CodePage1252(), Double.toString(properties.phase));    //draw phase
+
+        //tempo in bpm
         if(updateTempo){
             for(int i = 0; i < 128; i++){   //blank playerOnOff-bar
                 for(int j = 25; j < 37; j++){
                     ssd1306.setPixel(i, j, false);
                 }
             }
-            ssd1306.display();
+            System.out.println("tempo:" + properties.tempo);
 
-            // double _tempDecimals = properties.tempo/100;
-            // int _tempDecimalsnt = (int)_tempDecimals;
-            // int _temp = (int)properties.tempo;
-            if(properties.tempo < 100){
-                graphics.text(46, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,5));
-            }else{
-                graphics.text(40, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,6));
+            if(properties.tempo < 10 || properties.tempo > 999){
+                graphics.text(40, 25, new CodePage1252(), "---.--");
             }
-            graphics.text(78, 25, new CodePage1252(), "BPM");
+            else if(properties.tempo < 100){
+                if(Double.toString(properties.tempo).length() > 4) graphics.text(46, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,5));
+                else graphics.text(46, 25, new CodePage1252(), Double.toString(properties.tempo));
+                
+            }else{
+                if(Double.toString(properties.tempo).length() > 5) graphics.text(40, 25, new CodePage1252(), Double.toString(properties.tempo).substring(0,6));
+                else graphics.text(40, 25, new CodePage1252(), Double.toString(properties.tempo));
+            }
+            graphics.text(79, 25, new CodePage1252(), "BPM");
             // graphics.text(64, 25, new CodePage1252(), Integer.toString(_tempDecimalsnt));   //write decimals
             
             updateTempo = false;
             ssd1306.display();
         }
 
-
-        graphics.text(40, 0, new CodePage1252(), Double.toString(properties.phase));    //draw phase
-
+        //player-stuff
         if(initMain == true){
             for(int i = 0; i < 4; i++){ //draw player-frames
                 graphics.rectangle(i*32, 50, 32, 14, false);
                 graphics.text(i*32 + 13, 53 , new CodePage1252(), Integer.toString(i+1));   //draw playernumbers
             }
-
-            
 
             initMain = false;
             ssd1306.display();
