@@ -26,7 +26,6 @@ public class OBCdisplay {
     private static Timer timer;
     static int showIntervall_ms = 30;
 
-
     /*
      * initializes Display
      */
@@ -45,6 +44,7 @@ public class OBCdisplay {
                 showDisplay(); // show 
             }
         }, 0, showIntervall_ms); //no delay, then call method every x ms
+
     }
 
     /*

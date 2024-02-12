@@ -26,15 +26,16 @@ public class OBCgui
     static Button buttonLatUp;
     static Button buttonLatDown;
     static final int BTN_MA = 4;
-    static final int BTN_LUP = 22;
-    static final int BTN_LDDOWN = 27;
+    static final int BTN_LUP = 25;
+    static final int BTN_LDDOWN = 17;
 
     static Timer timer;
     static int intervall = 60;
 
-
+    static boolean testMaster = false;
     static int testLatency = 0;
-
+    //LED stuff
+    static OBCledhandler ledhandler;
 
     public static void main( String[] args )
     {
@@ -48,24 +49,30 @@ public class OBCgui
             public void run() {
 
             if(!buttonMaster.isPressed()){
-                System.out.println("is Master now");
-                while(!buttonMaster.isPressed()){}    //wait for button to get released
-            }
-            if(!buttonLatUp.isPressed()){
-                testLatency++;
-                // System.out.println(testLatency);
-                OBCdisplay.setLatency(testLatency);
-                while(!buttonLatUp.isPressed()){
-                    if(!buttonMaster.isPressed()){
-                        System.out.println( "exit application!" );
+                if(testMaster == true)testMaster = false;
+                else testMaster = true;
+                OBCledhandler.setMaster(testMaster);
+
+                while(!buttonMaster.isPressed()){
+                    if(!buttonLatDown.isPressed() && !buttonLatDown.isPressed()){
                         System.exit(0);
                     }
                 }    //wait for button to get released
             }
-            if(!buttonLatDown.isPressed()){
-                testLatency--;
+
+            if(!buttonLatUp.isPressed()){
+                // System.out.println("up is pressed");
+                testLatency++;
+                testLatency = checkLatency(testLatency, -20, 20);
                 OBCdisplay.setLatency(testLatency);
-                // System.out.println(testLatency);
+
+                while(!buttonLatUp.isPressed()){}    //wait for button to get released
+            }
+            if(!buttonLatDown.isPressed()){
+                // System.out.println("down is pressed");
+                testLatency--;
+                testLatency = checkLatency(testLatency, -20, 20);
+                OBCdisplay.setLatency(testLatency);
 
                 while(!buttonLatDown.isPressed()){}    //wait for button to get released
             }
@@ -129,6 +136,25 @@ public class OBCgui
         // System.exit(0);
     }
 
+    public static int checkLatency(int latency, int min, int max){
+        int _latency = latency;
+        if(latency <= min){
+            _latency = min;
+            OBCledhandler.setDown(false);
+            OBCledhandler.setUp(true);
+        }else if(latency >= max){
+            _latency = max;
+            OBCledhandler.setDown(true);
+            OBCledhandler.setUp(false);
+        }else{
+            _latency = latency;
+            OBCledhandler.setDown(true);
+            OBCledhandler.setUp(true);
+        }
+
+        return _latency;
+    }
+
     public static void initButtons() {
         buttonMaster  = new Button(BTN_MA);
         buttonLatUp  = new Button(BTN_LUP);
@@ -139,5 +165,9 @@ public class OBCgui
         System.out.println("init gui");
         transport = new I2CTransport(0, 1, 0x3C);
         OBCdisplay.init(transport);
+
+        System.out.println("init leds.");
+        ledhandler = new OBCledhandler();
+        ledhandler.init();
     }
 }
