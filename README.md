@@ -1,5 +1,9 @@
 # OBCGUI
 Java-project that implements the GUI of the [obcbox-project](https://github.com/kokospalme/java-BC).
+* Software: [main-project(obcbox)](https://github.com/kokospalme/java-BC)
+* Software: [obcgui](https://github.com/kokospalme/obcgui/)
+* Hardware: (coming soon...)
+
 # status quo
 <a href=""><img align="right" alt="hardware20240212" src="doc/hardware20240212.jpg" width="500"></a>
 - leds are implemented
