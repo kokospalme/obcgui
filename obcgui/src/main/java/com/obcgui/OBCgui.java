@@ -80,7 +80,7 @@ public class OBCgui
 
         }, 0, intervall); //no delay, then call method every x ms
 
-                    
+
 
 
         // OBCdisplay.init(transport);
@@ -92,7 +92,7 @@ public class OBCgui
         // }
         //
         // System.out.println( "set Player" );
-        
+
         OBCdisplay.setPlayerOnline(1, "XDJ1000MK2", false);
         OBCdisplay.setPlayerOnline(2, "AbletonLink", true);
         OBCdisplay.setPlayerMaster(2, true);
@@ -111,7 +111,7 @@ public class OBCgui
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         // System.out.println( "player1 offline" );
         // OBCdisplay.setPlayerOffline(1);
         // try {
@@ -165,9 +165,11 @@ public class OBCgui
         System.out.println("init gui");
         transport = new I2CTransport(0, 1, 0x3C);
         OBCdisplay.init(transport);
-
+        
         System.out.println("init leds.");
         ledhandler = new OBCledhandler();
+        System.out.println("ledhandler initialized");
         ledhandler.init();
+        System.out.println("leds initialized.");
     }
 }
