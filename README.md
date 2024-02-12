@@ -1,6 +1,7 @@
 # OBCGUI
 Java-project that implements the GUI of the [obcbox-project](https://github.com/kokospalme/java-BC).
 # status quo
+<a href=""><img align="right" alt="hardware20240212" src="doc/hardware20240212.jpg" width="500"></a>
 - leds are implemented
 - display and leds are working in direct ```obcgui.jar``` application
 ## known bug
