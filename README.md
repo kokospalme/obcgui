@@ -1,6 +1,6 @@
 # OBCGUI
 Java-project that implements the GUI of the [obcbox-project](https://github.com/kokospalme/java-BC).
-* Software (main): [java-BC](https://github.com/kokospalme/java-BC)
+* Software (main): [java-BC](https://github.com/kokospalme/java-BC/tree/obcbox)
 * Software (gui): [obcgui](https://github.com/kokospalme/obcgui/)
 * Hardware (pcb): [KiCad_obcbox](https://github.com/kokospalme/KiCad_obcbox)
 * Hardware (case): [grabcad](https://grabcad.com/library/obcbox-enclosure-v1-0-1)
